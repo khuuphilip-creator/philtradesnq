@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhilTradesNQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #111111;
+    --surface: #1a1a1a;
+    --border: #2a2a2a;
+    --purple: #6B4FA0;
+    --purple-deep: #3D2B72;
+    --purple-light: #9B7DC8;
+    --purple-tint: rgba(107,79,160,0.12);
+    --white: #F5F3EF;
+    --muted: #666660;
+    --muted-light: #999990;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px 80px;
+  }
+
+  /* ANIMATED BACKGROUND GRID */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(107,79,160,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(107,79,160,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* PROFILE */
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .avatar-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 2px solid var(--purple);
+    display: block;
+  }
+
+  .avatar-ring {
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px solid rgba(107,79,160,0.3);
+    animation: pulse 3s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.06); }
+  }
+
+  .name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .name span { color: var(--purple); }
+
+  .handle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+    margin-bottom: 16px;
+  }
+
+  .bio {
+    font-size: 13px;
+    color: var(--muted-light);
+    text-align: center;
+    line-height: 1.7;
+    max-width: 300px;
+  }
+
+  /* STAT ROW */
+  .stats {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .stat {
+    flex: 1;
+    background: var(--surface);
+    padding: 14px 8px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--purple);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  .stat-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
+  /* LINKS */
+  .links {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.2s;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .link-btn.primary {
+    background: var(--purple);
+    border: 1px solid var(--purple);
+    animation-delay: 0.2s;
+  }
+
+  .link-btn.primary:hover {
+    background: var(--purple-deep);
+    border-color: var(--purple-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(107,79,160,0.3);
+  }
+
+  .link-btn.secondary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    animation-delay: 0.3s;
+  }
+
+  .link-btn.secondary:hover {
+    border-color: var(--purple);
+    background: var(--purple-tint);
+    transform: translateY(-1px);
+  }
+
+  .link-btn.ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    animation-delay: 0.35s;
+  }
+
+  .link-btn.ghost:hover {
+    border-color: var(--muted);
+    transform: translateY(-1px);
+  }
+
+  .btn-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .link-btn.primary .btn-icon { background: rgba(255,255,255,0.15); }
+  .link-btn.secondary .btn-icon { background: var(--purple-tint); }
+  .link-btn.ghost .btn-icon { background: rgba(255,255,255,0.04); }
+
+  .btn-icon svg { width: 16px; height: 16px; }
+
+  .btn-text { display: flex; flex-direction: column; gap: 1px; }
+
+  .btn-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .btn-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(245,243,239,0.5);
+    text-transform: uppercase;
+  }
+
+  .link-btn.primary .btn-sub { color: rgba(255,255,255,0.6); }
+
+  .btn-arrow {
+    color: rgba(245,243,239,0.4);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .link-btn:hover .btn-arrow { color: var(--white); }
+
+  /* DIVIDER */
+  .divider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* SOCIAL ROW */
+  .socials {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s 0.45s ease both;
+  }
+
+  .social-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .social-btn:hover {
+    border-color: var(--purple-light);
+    background: var(--purple-tint);
+    transform: translateY(-1px);
+  }
+
+  .social-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .social-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+
+  .social-btn:hover .social-name { color: var(--white); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    animation: fadeUp 0.6s 0.5s ease both;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .footer-text a {
+    color: var(--purple-light);
+    text-decoration: none;
+  }
+
+  .footer-text a:hover { color: var(--white); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 48px 20px 60px; }
+    .stat-val { font-size: 16px; }
+    .stat-lbl { font-size: 7px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- PROFILE -->
+  <div class="profile">
+    <div class="avatar-wrap">
+      <img class="avatar" src="https://khuuphilip-creator.github.io/philtradesnq/LI_Headshot_V2.png" alt="Philip Khuu">
+      <div class="avatar-ring"></div>
+    </div>
+    <div class="name">Phil<span>Trades</span>NQ</div>
+    <div class="handle">@PhilTradesNQ</div>
+    <p class="bio">NQ &amp; ES futures trader. Consistent funded account payouts. I help serious traders pass their evals and keep the account.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val">7%</div>
+      <div class="stat-lbl">Ever get<br>paid out</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">20D</div>
+      <div class="stat-lbl">Avg funded<br>lifespan</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">60D</div>
+      <div class="stat-lbl">Program<br>length</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">Ltd</div>
+      <div class="stat-lbl">Founding<br>class</div>
+    </div>
+  </div>
+
+  <!-- MAIN LINKS -->
+  <div class="links">
+
+    <!-- PRIMARY CTA -->
+    <a class="link-btn primary" href="https://khuuphilip-creator.github.io/philtradesnq/" target="_blank">
+      <div class="btn-left">
+        <div class="btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+        <div class="btn-text">
+          <div class="btn-label">Apply — Founding Class</div>
+          <div class="btn-sub">60-Day Mentorship · $3,000</div>
+        </div>
+      </div>
+      <div class="btn-arrow">&#8599;</div>
+    </a>
+
+    <!-- FREE CONTENT -->
+    <a class="link-btn secondary" href="https://www.youtube.com/@PhilTradesNQ" target="_blank">
+      <div class="btn-left">
+        <div class="btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+          </svg>
+        </div>
+        <div class="btn-text">
+          <div class="btn-label">Free Trading Content</div>
+          <div class="btn-sub">YouTube · NQ &amp; ES Breakdowns</div>
+        </div>
+      </div>
+      <div class="btn-arrow">&#8599;</div>
+    </a>
+
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-text">Follow Along</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- SOCIALS -->
+  <div class="socials">
+
+    <a class="social-btn" href="https://www.instagram.com/PhilTradesNQ" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="var(--purple-light)"/>
+      </svg>
+      <span class="social-name">Instagram</span>
+    </a>
+
+    <a class="social-btn" href="https://www.tiktok.com/@PhilTradesNQ" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 12a4 4 0 100 8 4 4 0 000-8z"/><path d="M15 2s.5 3 3 4"/><path d="M9 12V2h4s0 6 6 6"/>
+      </svg>
+      <span class="social-name">TikTok</span>
+    </a>
+
+    <a class="social-btn" href="https://www.youtube.com/@PhilTradesNQ" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.47A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.97A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--purple-light)" stroke="none"/>
+      </svg>
+      <span class="social-name">YouTube</span>
+    </a>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-text">
+      NQ &amp; ES Futures Education · Not Financial Advice<br>
+      <a href="mailto:khuuphilip@gmail.com">khuuphilip@gmail.com</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
