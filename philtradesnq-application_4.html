@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply — PhilTradesNQ Mentorship</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F3EF;
+    --surface: #EDEAE4;
+    --card: #E8E5DF;
+    --border: #D4D0C8;
+    --purple: #6B4FA0;
+    --purple-deep: #3D2B72;
+    --purple-light: #9B7DC8;
+    --purple-tint: #EDE8F5;
+    --purple-dim: rgba(107,79,160,0.12);
+    --black: #111111;
+    --black-soft: #2C2C2C;
+    --muted: #8A8680;
+    --muted-dark: #5A5650;
+    --red: #C0392B;
+    --green: #1E7F4E;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--black-soft); font-family:'DM Sans',sans-serif; font-weight:300; line-height:1.6; min-height:100vh; overflow-x:hidden; }
+
+  .form-progress { position:fixed; top:0; left:0; right:0; height:3px; background:var(--border); z-index:200; }
+  .form-progress-fill { height:100%; background:var(--purple); transition:width 0.4s ease; width:0%; }
+
+  .site-header { position:fixed; top:0; left:0; right:0; z-index:100; padding:18px 48px; display:flex; align-items:center; justify-content:space-between; background:rgba(245,243,239,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .logo { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.12em; color:var(--black); }
+  .logo span { color:var(--purple); }
+  .header-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted); border:1px solid var(--border); padding:5px 12px; border-radius:2px; }
+
+  .hero { padding:140px 48px 64px; max-width:860px; margin:0 auto; }
+  .hero-kicker { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--purple); margin-bottom:20px; display:flex; align-items:center; gap:14px; }
+  .kicker-line { height:1px; width:32px; background:var(--purple-light); opacity:0.5; }
+  .hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(54px,9vw,108px); line-height:0.9; letter-spacing:0.02em; color:var(--black); margin-bottom:28px; }
+  .hero-title .accent { color:var(--purple); }
+  .hero-body { font-size:16px; color:var(--muted-dark); max-width:520px; line-height:1.8; margin-bottom:40px; }
+
+  .stat-strip { display:flex; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; max-width:600px; margin-bottom:64px; }
+  .stat-item { flex:1; background:#fff; padding:18px 20px; }
+  .stat-val { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--purple); letter-spacing:0.05em; line-height:1; margin-bottom:3px; }
+  .stat-lbl { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); }
+
+  .qualify-block { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; margin-bottom:72px; }
+  .qualify-col { background:#fff; padding:28px 32px; }
+  .qualify-col.dark { background:var(--surface); }
+  .qualify-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .qualify-label.yes { color:var(--green); }
+  .qualify-label.no { color:var(--red); }
+  .qualify-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .qualify-dot.yes { background:var(--green); }
+  .qualify-dot.no { background:var(--red); }
+  .qualify-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .qualify-list li { font-size:13px; color:var(--muted-dark); line-height:1.5; padding-left:14px; position:relative; }
+  .qualify-list li::before { content:'—'; position:absolute; left:0; color:var(--muted); font-size:11px; }
+
+  .form-wrap { max-width:860px; margin:0 auto; padding:0 48px 120px; }
+  .form-section-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.28em; text-transform:uppercase; color:var(--purple); margin-bottom:24px; display:flex; align-items:center; gap:12px; }
+  .form-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .q-block { margin-bottom:28px; }
+  .q-num { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .q-label { font-size:15px; font-weight:500; color:var(--black); margin-bottom:4px; line-height:1.4; }
+  .q-hint { font-size:12px; color:var(--muted); font-style:italic; margin-bottom:10px; }
+
+  input[type="text"], input[type="email"], select, textarea { width:100%; background:#fff; border:1px solid var(--border); color:var(--black-soft); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:300; padding:13px 16px; border-radius:2px; outline:none; transition:border-color 0.2s, box-shadow 0.2s; appearance:none; }
+  input:focus, select:focus, textarea:focus { border-color:var(--purple); box-shadow:0 0 0 3px var(--purple-dim); }
+  input::placeholder, textarea::placeholder { color:var(--muted); }
+  textarea { resize:vertical; min-height:110px; line-height:1.6; }
+  select { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8680' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; background-color:#fff; padding-right:40px; }
+
+  .choice-group { display:flex; flex-direction:column; gap:8px; }
+  .choice-group.horizontal { flex-direction:row; flex-wrap:wrap; }
+  .check-group { display:flex; flex-wrap:wrap; gap:8px; }
+
+  .choice-item, .check-item { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--border); border-radius:2px; padding:11px 16px; cursor:pointer; transition:all 0.15s; user-select:none; }
+  .choice-item:hover, .check-item:hover { border-color:var(--purple-light); background:var(--purple-tint); }
+  .choice-item.selected { border-color:var(--purple); background:var(--purple-tint); }
+  .check-item.checked { border-color:var(--purple); background:var(--purple-tint); }
+
+  .choice-dot { width:14px; height:14px; border-radius:50%; border:1.5px solid var(--border); flex-shrink:0; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+  .choice-item.selected .choice-dot { border-color:var(--purple); background:var(--purple); }
+  .choice-item.selected .choice-dot::after { content:''; width:5px; height:5px; border-radius:50%; background:#fff; }
+
+  .check-box { width:14px; height:14px; border-radius:2px; border:1.5px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:transparent; transition:all 0.15s; }
+  .check-item.checked .check-box { border-color:var(--purple); background:var(--purple); color:#fff; }
+
+  .choice-text, .check-text { font-size:13px; color:var(--muted-dark); transition:color 0.15s; line-height:1.4; }
+  .choice-item.selected .choice-text, .check-item.checked .check-text { color:var(--purple-deep); }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+  .commitment-box { background:var(--purple-tint); border:1px solid rgba(107,79,160,0.2); border-left:3px solid var(--purple); border-radius:2px; padding:18px 20px; margin-bottom:14px; }
+  .commitment-title { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--purple-deep); margin-bottom:8px; }
+  .commitment-text { font-size:13px; color:var(--muted-dark); line-height:1.7; }
+  .commitment-text strong { color:var(--black); font-weight:500; }
+
+  .disclaimer-wrap { display:flex; align-items:flex-start; gap:14px; background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:18px 20px; cursor:pointer; transition:all 0.15s; margin-bottom:28px; }
+  .disclaimer-wrap:hover { border-color:var(--purple-light); }
+  .disclaimer-wrap.checked { border-color:var(--purple); background:var(--purple-tint); }
+  .disc-box { width:16px; height:16px; border-radius:2px; border:1.5px solid var(--border); flex-shrink:0; margin-top:2px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:transparent; transition:all 0.15s; }
+  .disclaimer-wrap.checked .disc-box { background:var(--purple); border-color:var(--purple); color:#fff; }
+  .disc-text { font-size:12px; color:var(--muted-dark); line-height:1.7; }
+  .disc-text strong { color:var(--black); font-weight:500; }
+
+  .field-error { font-size:11px; color:var(--red); font-family:'DM Mono',monospace; letter-spacing:0.06em; margin-top:6px; display:none; }
+  .field-error.visible { display:block; }
+  input.error, select.error, textarea.error { border-color:var(--red); }
+
+  .submit-section { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+  .submit-btn { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:0.15em; color:#fff; background:var(--purple); border:none; padding:18px 52px; border-radius:2px; cursor:pointer; transition:all 0.2s; }
+  .submit-btn:hover { background:var(--purple-deep); transform:translateY(-1px); box-shadow:0 6px 20px rgba(107,79,160,0.25); }
+  .submit-btn:active { transform:translateY(0); box-shadow:none; }
+  .submit-btn:disabled { opacity:0.45; cursor:not-allowed; transform:none; box-shadow:none; }
+  .submit-note { font-size:12px; color:var(--muted); font-family:'DM Mono',monospace; letter-spacing:0.06em; line-height:1.7; }
+
+  .success-screen { display:none; text-align:center; padding:80px 40px; }
+  .success-screen.visible { display:block; }
+  .success-icon { width:56px; height:56px; border-radius:50%; background:rgba(30,127,78,0.08); border:1px solid rgba(30,127,78,0.25); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:22px; color:var(--green); }
+  .success-title { font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:0.05em; color:var(--black); margin-bottom:12px; }
+  .success-sub { font-size:14px; color:var(--muted-dark); max-width:420px; margin:0 auto; line-height:1.8; }
+
+  @media(max-width:680px) {
+    .site-header { padding:14px 20px; }
+    .hero { padding:110px 20px 48px; }
+    .form-wrap { padding:0 20px 80px; }
+    .two-col { grid-template-columns:1fr; }
+    .qualify-block { grid-template-columns:1fr; }
+    .choice-group.horizontal { flex-direction:column; }
+    .submit-section { flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="form-progress"><div class="form-progress-fill" id="progressFill"></div></div>
+
+<header class="site-header">
+  <div class="logo">Phil<span>Trades</span>NQ</div>
+  <div class="header-tag">Mentorship Application — Founding Class</div>
+</header>
+
+<div class="hero">
+  <div class="hero-kicker"><div class="kicker-line"></div>Selective Enrollment<div class="kicker-line"></div></div>
+  <h1 class="hero-title">Apply For<br><span class="accent">The Program</span></h1>
+  <p class="hero-body">This is not a course. This is a 60-day mentorship built around your specific eval, your specific firm, and your specific mistakes. Founding Class enrollment is limited. Applications reviewed within 24 hours.</p>
+  <div class="stat-strip">
+    <div class="stat-item"><div class="stat-val">10–15%</div><div class="stat-lbl">Pass evaluations</div></div>
+    <div class="stat-item"><div class="stat-val">7%</div><div class="stat-lbl">Ever receive a payout</div></div>
+    <div class="stat-item"><div class="stat-val">20 Days</div><div class="stat-lbl">Avg funded lifespan</div></div>
+    <div class="stat-item"><div class="stat-val">60 Days</div><div class="stat-lbl">Program length</div></div>
+    <div class="stat-item"><div class="stat-val">Limited</div><div class="stat-lbl">Founding class availability</div></div>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <div class="qualify-block">
+    <div class="qualify-col">
+      <div class="qualify-label yes"><div class="qualify-dot yes"></div>This is for you if</div>
+      <ul class="qualify-list">
+        <li>You trade NQ or ES futures specifically</li>
+        <li>You have failed one or more prop firm evals</li>
+        <li>You are serious about consistent payouts, not gambling</li>
+        <li>You can dedicate 10 or more hours per week</li>
+        <li>You are ready to follow a defined framework</li>
+        <li>You have invested real money trying to solve this already</li>
+      </ul>
+    </div>
+    <div class="qualify-col dark">
+      <div class="qualify-label no"><div class="qualify-dot no"></div>This is not for you if</div>
+      <ul class="qualify-list">
+        <li>You trade forex, crypto, or commodities only</li>
+        <li>You have never attempted an eval before</li>
+        <li>You believe your losses are the market's fault</li>
+        <li>You cannot commit 10 hours per week minimum</li>
+        <li>You are looking for a get-rich-quick shortcut</li>
+        <li>You are not ready to invest seriously in the solution</li>
+      </ul>
+    </div>
+  </div>
+
+  <form id="appForm" novalidate>
+
+    <div class="form-section-label">01 — About You</div>
+    <div class="two-col">
+      <div class="q-block">
+        <div class="q-num">Question 01</div>
+        <div class="q-label">Full Name <span style="color:var(--red)">*</span></div>
+        <input type="text" id="fullName" placeholder="Your full name" required>
+        <div class="field-error" id="err-fullName">Please enter your name.</div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Question 02</div>
+        <div class="q-label">Email Address <span style="color:var(--red)">*</span></div>
+        <input type="email" id="email" placeholder="your@email.com" required>
+        <div class="field-error" id="err-email">Please enter a valid email.</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-num">Question 03</div>
+      <div class="q-label">How did you find PhilTradesNQ? <span style="color:var(--red)">*</span></div>
+      <div class="choice-group horizontal" id="referral">
+        <div class="choice-item" data-value="Instagram" onclick="selectRadio(this,'referral')"><div class="choice-dot"></div><div class="choice-text">Instagram</div></div>
+        <div class="choice-item" data-value="TikTok" onclick="selectRadio(this,'referral')"><div class="choice-dot"></div><div class="choice-text">TikTok</div></div>
+        <div class="choice-item" data-value="X / Twitter" onclick="selectRadio(this,'referral')"><div class="choice-dot"></div><div class="choice-text">X / Twitter</div></div>
+        <div class="choice-item" data-value="YouTube" onclick="selectRadio(this,'referral')"><div class="choice-dot"></div><div class="choice-text">YouTube</div></div>
+        <div class="choice-item" data-value="Referral" onclick="selectRadio(this,'referral')"><div class="choice-dot"></div><div class="choice-text">Referred by someone</div></div>
+        <div class="choice-item" data-value="Other" onclick="selectRadio(this,'referral')"><div class="choice-dot"></div><div class="choice-text">Other</div></div>
+      </div>
+      <div class="field-error" id="err-referral">Please select an option.</div>
+    </div>
+
+    <div class="form-section-label" style="margin-top:48px;">02 — Your Trading Background</div>
+
+    <div class="q-block">
+      <div class="q-num">Question 04</div>
+      <div class="q-label">What futures contracts do you primarily trade? <span style="color:var(--red)">*</span></div>
+      <div class="q-hint">Select all that apply.</div>
+      <div class="check-group" id="contracts">
+        <div class="check-item" data-value="NQ" onclick="toggleCheck(this,'contracts')"><div class="check-box">&#10003;</div><div class="check-text">NQ (Nasdaq)</div></div>
+        <div class="check-item" data-value="ES" onclick="toggleCheck(this,'contracts')"><div class="check-box">&#10003;</div><div class="check-text">ES (S&amp;P 500)</div></div>
+        <div class="check-item" data-value="MNQ" onclick="toggleCheck(this,'contracts')"><div class="check-box">&#10003;</div><div class="check-text">MNQ (Micro NQ)</div></div>
+        <div class="check-item" data-value="MES" onclick="toggleCheck(this,'contracts')"><div class="check-box">&#10003;</div><div class="check-text">MES (Micro ES)</div></div>
+        <div class="check-item" data-value="Other" onclick="toggleCheck(this,'contracts')"><div class="check-box">&#10003;</div><div class="check-text">Other</div></div>
+      </div>
+      <div class="field-error" id="err-contracts">Please select at least one contract.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="q-block">
+        <div class="q-num">Question 05</div>
+        <div class="q-label">Prop firm you are using or plan to use <span style="color:var(--red)">*</span></div>
+        <select id="propFirm" required>
+          <option value="" disabled selected>Select a firm</option>
+          <option>Apex Trader Funding</option>
+          <option>Topstep</option>
+          <option>Earn2Trade</option>
+          <option>MyFundedFutures</option>
+          <option>Take Profit Trader</option>
+          <option>Tradeify</option>
+          <option>Other</option>
+          <option>Not decided yet</option>
+        </select>
+        <div class="field-error" id="err-propFirm">Please select a firm.</div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Question 06</div>
+        <div class="q-label">Target account size <span style="color:var(--red)">*</span></div>
+        <select id="accountSize" required>
+          <option value="" disabled selected>Select account size</option>
+          <option>$25,000</option>
+          <option>$50,000</option>
+          <option>$100,000</option>
+          <option>$150,000</option>
+          <option>$200,000+</option>
+          <option>Not decided yet</option>
+        </select>
+        <div class="field-error" id="err-accountSize">Please select an account size.</div>
+      </div>
+    </div>
+
+    <div class="form-section-label" style="margin-top:48px;">03 — Evaluation History</div>
+
+    <div class="q-block">
+      <div class="q-num">Question 07</div>
+      <div class="q-label">How many prop firm evaluations have you attempted in the last 12 months? <span style="color:var(--red)">*</span></div>
+      <div class="choice-group horizontal" id="evalCount">
+        <div class="choice-item" data-value="0 — First time" onclick="selectRadio(this,'evalCount')"><div class="choice-dot"></div><div class="choice-text">0 — First time</div></div>
+        <div class="choice-item" data-value="1" onclick="selectRadio(this,'evalCount')"><div class="choice-dot"></div><div class="choice-text">1</div></div>
+        <div class="choice-item" data-value="2–3" onclick="selectRadio(this,'evalCount')"><div class="choice-dot"></div><div class="choice-text">2 – 3</div></div>
+        <div class="choice-item" data-value="4–6" onclick="selectRadio(this,'evalCount')"><div class="choice-dot"></div><div class="choice-text">4 – 6</div></div>
+        <div class="choice-item" data-value="7+" onclick="selectRadio(this,'evalCount')"><div class="choice-dot"></div><div class="choice-text">7+</div></div>
+      </div>
+      <div class="field-error" id="err-evalCount">Please select an option.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-num">Question 08</div>
+      <div class="q-label">How much have you spent on evaluation fees and trading education in the last 12 months? <span style="color:var(--red)">*</span></div>
+      <div class="q-hint">Be honest — this helps me understand where you are starting from and structure the right solution for you.</div>
+      <div class="choice-group" id="totalSpent">
+        <div class="choice-item" data-value="Under $500" onclick="selectRadio(this,'totalSpent')"><div class="choice-dot"></div><div class="choice-text">Under $500</div></div>
+        <div class="choice-item" data-value="$500–$1,500" onclick="selectRadio(this,'totalSpent')"><div class="choice-dot"></div><div class="choice-text">$500 – $1,500</div></div>
+        <div class="choice-item" data-value="$1,500–$3,000" onclick="selectRadio(this,'totalSpent')"><div class="choice-dot"></div><div class="choice-text">$1,500 – $3,000</div></div>
+        <div class="choice-item" data-value="$3,000–$5,000" onclick="selectRadio(this,'totalSpent')"><div class="choice-dot"></div><div class="choice-text">$3,000 – $5,000</div></div>
+        <div class="choice-item" data-value="$5,000+" onclick="selectRadio(this,'totalSpent')"><div class="choice-dot"></div><div class="choice-text">$5,000+</div></div>
+      </div>
+      <div class="field-error" id="err-totalSpent">Please select an option.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-num">Question 09</div>
+      <div class="q-label">When you have failed an evaluation or blown a funded account, what was the primary reason? <span style="color:var(--red)">*</span></div>
+      <div class="choice-group" id="failReason">
+        <div class="choice-item" data-value="No repeatable entry framework" onclick="selectRadio(this,'failReason')"><div class="choice-dot"></div><div class="choice-text">No repeatable entry framework — I had no defined system</div></div>
+        <div class="choice-item" data-value="Risk management broke down" onclick="selectRadio(this,'failReason')"><div class="choice-dot"></div><div class="choice-text">Risk management broke down — I oversized or revenge traded</div></div>
+        <div class="choice-item" data-value="Did not understand drawdown rules" onclick="selectRadio(this,'failReason')"><div class="choice-dot"></div><div class="choice-text">Did not understand the drawdown rules well enough</div></div>
+        <div class="choice-item" data-value="Psychology" onclick="selectRadio(this,'failReason')"><div class="choice-dot"></div><div class="choice-text">Psychology — pressure caused me to deviate from my plan</div></div>
+        <div class="choice-item" data-value="Combination of the above" onclick="selectRadio(this,'failReason')"><div class="choice-dot"></div><div class="choice-text">Combination of the above</div></div>
+        <div class="choice-item" data-value="N/A — have not attempted an eval yet" onclick="selectRadio(this,'failReason')"><div class="choice-dot"></div><div class="choice-text">N/A — I have not attempted an eval yet</div></div>
+      </div>
+      <div class="field-error" id="err-failReason">Please select an option.</div>
+    </div>
+
+    <div class="form-section-label" style="margin-top:48px;">04 — Process &amp; Commitment</div>
+
+    <div class="q-block">
+      <div class="q-num">Question 10</div>
+      <div class="q-label">Describe your current pre-market routine. What do you look at before the open and how do you decide when to take a trade? <span style="color:var(--red)">*</span></div>
+      <div class="q-hint">Be specific. If you do not have one yet, say so. There is no wrong answer — only an honest one.</div>
+      <textarea id="premarket" placeholder="Walk me through what you do before the market opens..." required></textarea>
+      <div class="field-error" id="err-premarket">Please describe your pre-market process.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-num">Question 11</div>
+      <div class="q-label">How many hours per week can you realistically dedicate to this program? <span style="color:var(--red)">*</span></div>
+      <div class="commitment-box">
+        <div class="commitment-title">Minimum Commitment Requirement</div>
+        <div class="commitment-text">This mentorship requires a <strong>minimum of 10 hours per week</strong> of active participation — market session time, weekly calls, trade markup review, and journaling. If you cannot commit to this, the Vault self-study program is the right starting point for you.</div>
+      </div>
+      <div class="choice-group" id="hoursPerWeek">
+        <div class="choice-item" data-value="Under 5 hours" onclick="selectRadio(this,'hoursPerWeek')"><div class="choice-dot"></div><div class="choice-text">Under 5 hours — I have limited availability right now</div></div>
+        <div class="choice-item" data-value="5–10 hours" onclick="selectRadio(this,'hoursPerWeek')"><div class="choice-dot"></div><div class="choice-text">5 – 10 hours per week</div></div>
+        <div class="choice-item" data-value="10–15 hours" onclick="selectRadio(this,'hoursPerWeek')"><div class="choice-dot"></div><div class="choice-text">10 – 15 hours per week</div></div>
+        <div class="choice-item" data-value="15–20 hours" onclick="selectRadio(this,'hoursPerWeek')"><div class="choice-dot"></div><div class="choice-text">15 – 20 hours per week</div></div>
+        <div class="choice-item" data-value="20+ hours" onclick="selectRadio(this,'hoursPerWeek')"><div class="choice-dot"></div><div class="choice-text">20+ hours — Trading is my primary focus</div></div>
+      </div>
+      <div class="field-error" id="err-hoursPerWeek">Please select your availability.</div>
+    </div>
+
+    <div class="form-section-label" style="margin-top:48px;">05 — Goals &amp; Investment</div>
+
+    <div class="q-block">
+      <div class="q-num">Question 12</div>
+      <div class="q-label">What does your life look like 6 months from now if you pass your evaluation and receive consistent payouts? <span style="color:var(--red)">*</span></div>
+      <div class="q-hint">Be specific about what changes — financially, professionally, personally.</div>
+      <textarea id="sixMonths" placeholder="Describe what success looks like for you..." required></textarea>
+      <div class="field-error" id="err-sixMonths">Please answer this question.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-num">Question 13</div>
+      <div class="q-label">What is your realistic investment budget for solving this in the next 60 days? <span style="color:var(--red)">*</span></div>
+      <div class="q-hint">This is not a commitment. It helps me understand whether mentorship or the Vault is the right fit for where you are.</div>
+      <div class="choice-group" id="budget">
+        <div class="choice-item" data-value="Under $500" onclick="selectRadio(this,'budget')"><div class="choice-dot"></div><div class="choice-text">Under $500</div></div>
+        <div class="choice-item" data-value="$500–$1,500" onclick="selectRadio(this,'budget')"><div class="choice-dot"></div><div class="choice-text">$500 – $1,500</div></div>
+        <div class="choice-item" data-value="$1,500–$2,500" onclick="selectRadio(this,'budget')"><div class="choice-dot"></div><div class="choice-text">$1,500 – $2,500</div></div>
+        <div class="choice-item" data-value="$2,500–$4,000" onclick="selectRadio(this,'budget')"><div class="choice-dot"></div><div class="choice-text">$2,500 – $4,000</div></div>
+        <div class="choice-item" data-value="$4,000+" onclick="selectRadio(this,'budget')"><div class="choice-dot"></div><div class="choice-text">$4,000+ — Investment is not the barrier</div></div>
+      </div>
+      <div class="field-error" id="err-budget">Please select an option.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-num">Question 14</div>
+      <div class="q-label">Is there anything else you want me to know about where you are in your trading journey?</div>
+      <div class="q-hint">Optional — but people often say the most important thing here.</div>
+      <textarea id="anything" placeholder="Anything else relevant to your situation..." style="min-height:90px;"></textarea>
+    </div>
+
+    <div class="disclaimer-wrap" id="disclaimerWrap" onclick="toggleDisclaimer()">
+      <div class="disc-box" id="discBox">&#10003;</div>
+      <div class="disc-text"><strong>I understand that PhilTradesNQ is an educational mentorship program and not a financial advisory service.</strong> Results shown are not guaranteed. Past performance does not guarantee future results. I am responsible for my own trading decisions and capital.</div>
+    </div>
+    <div class="field-error" id="err-disclaimer">You must acknowledge this to continue.</div>
+
+    <div class="submit-section">
+      <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+      <div class="submit-note">Applications reviewed within 24 hours.<br>Qualified applicants receive a discovery call link.</div>
+    </div>
+  </form>
+
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">&#10003;</div>
+    <div class="success-title">Application Received</div>
+    <p class="success-sub">Your application has been submitted. I review every application personally and you will hear back within 24 hours. If you are a fit for the Founding Class you will receive a link to book your discovery call.</p>
+  </div>
+</div>
+
+<script>
+  var radioValues = {};
+  var checkValues = {};
+  var disclaimerChecked = false;
+
+  function selectRadio(el, groupId) {
+    document.querySelectorAll('#' + groupId + ' .choice-item').forEach(function(i) { i.classList.remove('selected'); });
+    el.classList.add('selected');
+    radioValues[groupId] = el.getAttribute('data-value');
+    clearError(groupId);
+    updateProgress();
+  }
+
+  function toggleCheck(el, groupId) {
+    el.classList.toggle('checked');
+    if (!checkValues[groupId]) checkValues[groupId] = [];
+    var val = el.getAttribute('data-value');
+    var idx = checkValues[groupId].indexOf(val);
+    if (idx > -1) { checkValues[groupId].splice(idx, 1); } else { checkValues[groupId].push(val); }
+    clearError(groupId);
+    updateProgress();
+  }
+
+  function toggleDisclaimer() {
+    disclaimerChecked = !disclaimerChecked;
+    document.getElementById('disclaimerWrap').classList.toggle('checked', disclaimerChecked);
+    clearError('disclaimer');
+    updateProgress();
+  }
+
+  function clearError(id) {
+    var e = document.getElementById('err-' + id); if (e) e.classList.remove('visible');
+    var f = document.getElementById(id); if (f) f.classList.remove('error');
+  }
+
+  function showError(id) {
+    var e = document.getElementById('err-' + id); if (e) e.classList.add('visible');
+    var f = document.getElementById(id); if (f) f.classList.add('error');
+  }
+
+  function updateProgress() {
+    var filled = 0; var total = 13;
+    ['fullName','email','premarket','sixMonths'].forEach(function(id) { if (document.getElementById(id).value.trim()) filled++; });
+    ['referral','evalCount','totalSpent','failReason','hoursPerWeek','budget'].forEach(function(id) { if (radioValues[id]) filled++; });
+    if ((checkValues['contracts'] || []).length > 0) filled++;
+    if (document.getElementById('propFirm').value) filled++;
+    if (document.getElementById('accountSize').value) filled++;
+    if (disclaimerChecked) filled++;
+    document.getElementById('progressFill').style.width = Math.round((filled/total)*100) + '%';
+  }
+
+  ['fullName','email','premarket','sixMonths','anything'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', function() { clearError(id); updateProgress(); });
+  });
+  ['propFirm','accountSize'].forEach(function(id) {
+    document.getElementById(id).addEventListener('change', function() { clearError(id); updateProgress(); });
+  });
+
+  function validate() {
+    var valid = true;
+    ['fullName','premarket','sixMonths'].forEach(function(id) { if (!document.getElementById(id).value.trim()) { showError(id); valid = false; } });
+    var em = document.getElementById('email');
+    if (!em.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) { showError('email'); valid = false; }
+    ['propFirm','accountSize'].forEach(function(id) { if (!document.getElementById(id).value) { showError(id); valid = false; } });
+    ['referral','evalCount','totalSpent','failReason','hoursPerWeek','budget'].forEach(function(id) { if (!radioValues[id]) { showError(id); valid = false; } });
+    if (!checkValues['contracts'] || checkValues['contracts'].length === 0) { showError('contracts'); valid = false; }
+    if (!disclaimerChecked) { showError('disclaimer'); valid = false; }
+    return valid;
+  }
+
+  document.getElementById('appForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!validate()) {
+      var firstErr = document.querySelector('.field-error.visible');
+      if (firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    var data = {
+      name: document.getElementById('fullName').value,
+      email: document.getElementById('email').value,
+      referral: radioValues['referral'] || '',
+      contracts: (checkValues['contracts'] || []).join(', '),
+      propFirm: document.getElementById('propFirm').value,
+      accountSize: document.getElementById('accountSize').value,
+      evalCount: radioValues['evalCount'] || '',
+      totalSpent: radioValues['totalSpent'] || '',
+      failReason: radioValues['failReason'] || '',
+      premarket: document.getElementById('premarket').value,
+      hoursPerWeek: radioValues['hoursPerWeek'] || '',
+      sixMonths: document.getElementById('sixMonths').value,
+      budget: radioValues['budget'] || '',
+      anything: document.getElementById('anything').value,
+      submittedAt: new Date().toISOString()
+    };
+    var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyQ8w1w7Xt1V3ZXpfw_6FGjpsiqnUpgMQ8ZyvFj6-VyD46PXj6ECRSVaz58Yf76jG8/exec';
+
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function() {
+      document.getElementById('appForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('visible');
+      document.getElementById('progressFill').style.width = '100%';
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }).catch(function() {
+      document.getElementById('appForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('visible');
+      document.getElementById('progressFill').style.width = '100%';
+      window.scrollTo({ top:0, behavior:'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
